@@ -1,0 +1,31 @@
+@use '../variaveis.scss';
+@use './main.scss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+header{
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: blue;
+    font-family: "Inter";
+    color: #ffffff;
+
+    .ul-list{
+        display: flex;
+        gap: 1rem;
+        color: #ffffff;
+        list-style-type: none;
+    }
+
+    .link-header{
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    a:hover{
+        text-decoration: underline;
+    }
+
+
+}
