@@ -1,0 +1,33 @@
+@use '../variaveis.scss';
+
+.container-form{
+    display: flex;
+    // justify-content: center;
+    font-family: Inter;
+    align-items: center;
+    flex-direction: column;
+
+    .form{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: start;
+        align-items:center;
+        height: 15vh;
+
+        input{
+            border: 1px solid rgb(202, 202, 202);
+            border-radius: 5px;
+            padding: 0.5rem;
+            outline: none;
+        }
+
+        button{
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            color: #ffffff;
+            background-color: blue;
+        }
+    }
+}

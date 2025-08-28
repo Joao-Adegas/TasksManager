@@ -10,7 +10,7 @@ export default function header(){
                 <ul className="ul-list">
                     <li><a href="#" className="link-header" >Cadastro de Usuário</a> </li>
                     <li><a href="#" className="link-header" >Cadastro de Taredas</a> </li>
-                    <li><a href="#" className="link-header" >Gerecnaiemnto de Tarefas</a> </li>
+                    <li><a href="#" className="link-header" >Gerenciamento de Tarefas</a> </li>
                 </ul>
             </nav>
         </header>
