@@ -9,15 +9,15 @@ export default function CadastroUsuario(){
                 <form className="form">
 
                     <div className="input">
-                        <p>Nome:</p>
+                        <label>Nome:</label>
                         <input type="text" />
                     </div>
 
                     <div className="input">
-                        <p>Email:</p>
+                        <label>Email:</label>
                         <input type="text" />
                     </div>
-                    <button>Cadastrar</button>
+                    <button className="btn">Cadastrar</button>
                 </form>
             </div>
         </section>
