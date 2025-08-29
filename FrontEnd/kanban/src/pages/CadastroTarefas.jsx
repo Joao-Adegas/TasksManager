@@ -3,7 +3,7 @@ import "../styles/CadUsuario.scss"
 
 export default function CadastroTarefas(){
     return(
-        <section className="cadTarefas">
+        <section className="section-form">
             <div className="container-form">
 
                 <h1>Cadastro de Tarefas</h1>
