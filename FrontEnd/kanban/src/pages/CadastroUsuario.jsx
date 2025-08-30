@@ -2,10 +2,9 @@ import "../styles/CadUsuario.scss"
 
 export default function CadastroUsuario(){
     return(
-        
         <section className="section-form">
             <div className="container-form">
-                <h1>Cadastro de usuário</h1>
+                <h1 className="title-form">Cadastro de usuário</h1>
                 <form className="form">
 
                     <div className="input">

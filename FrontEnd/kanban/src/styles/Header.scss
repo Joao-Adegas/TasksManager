@@ -1,5 +1,5 @@
-@use '../variaveis.scss';
-@use './main.scss';
+@use '../variaveis.scss'as *;
+@use './main.scss' as *;
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 header{
@@ -7,9 +7,15 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: blue;
+    background-color: $azul-padrao;
+    text-align: center;
     font-family: 'Arial';
     color: #ffffff;
+    flex-wrap: wrap;
+
+    .titlle{
+        text-align: center;
+    }
 
     .ul-list{
         display: flex;
