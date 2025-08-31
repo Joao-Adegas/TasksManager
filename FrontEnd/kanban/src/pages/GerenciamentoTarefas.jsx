@@ -1,97 +1,11 @@
 import "../styles/GerenciamentoTarefas.scss"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import { viewTasks, createTask } from "../api/tasks";
 
 export default function GerenciamentoTarefas() {
-    const [tarefas, setTarefas] = useState([
-        {
-            id: 1,
-            titulo: "Implementar sistema de autenticação",
-            descricao: "Criar sistema completo de login e cadastro com validação",
-            setor: "Desenvolvimento",
-            prioridade: "Alta",
-            status: "A fazer",
-            vinculadaA: "João Silva",
-            dataCreacao: "2024-01-15",
-            prazo: "2024-01-30"
-        },
-        {
-            id: 2,
-            titulo: "Revisar documentação do projeto",
-            descricao: "Atualizar toda documentação técnica e manual do usuário",
-            setor: "Documentação",
-            prioridade: "Média",
-            status: "Fazendo",
-            vinculadaA: "Maria Santos",
-            dataCreacao: "2024-01-10",
-            prazo: "2024-01-25"
-        },
-        {
-            id: 3,
-            titulo: "Desenvolver interface do dashboard",
-            descricao: "Criar layout responsivo para o painel administrativo",
-            setor: "Design/Frontend",
-            prioridade: "Alta",
-            status: "Fazendo",
-            vinculadaA: "Pedro Costa",
-            dataCreacao: "2024-01-12",
-            prazo: "2024-01-28"
-        },
-        {
-            id: 4,
-            titulo: "Configurar banco de dados",
-            descricao: "Estruturar tabelas e relacionamentos do sistema",
-            setor: "Backend",
-            prioridade: "Alta",
-            status: "Pronto",
-            vinculadaA: "Ana Oliveira",
-            dataCreacao: "2024-01-05",
-            prazo: "2024-01-20"
-        },
-        {
-            id: 5,
-            titulo: "Testes de performance",
-            descricao: "Executar testes de carga e otimizar consultas SQL",
-            setor: "QA",
-            prioridade: "Média",
-            status: "A fazer",
-            vinculadaA: "Carlos Lima",
-            dataCreacao: "2024-01-14",
-            prazo: "2024-02-05"
-        },
-        {
-            id: 6,
-            titulo: "Deploy em produção",
-            descricao: "Configurar servidor e fazer deploy da aplicação",
-            setor: "DevOps",
-            prioridade: "Alta",
-            status: "A fazer",
-            vinculadaA: "Lucia Ferreira",
-            dataCreacao: "2024-01-16",
-            prazo: "2024-02-10"
-        },
-        {
-            id: 7,
-            titulo: "Criar manual do usuário",
-            descricao: "Documentar todas as funcionalidades para usuários finais",
-            setor: "Documentação",
-            prioridade: "Baixa",
-            status: "A fazer",
-            vinculadaA: "Roberto Silva",
-            dataCreacao: "2024-01-08",
-            prazo: "2024-02-15"
-        },
-        {
-            id: 8,
-            titulo: "Implementar notificações",
-            descricao: "Sistema de notificações via email e push",
-            setor: "Backend",
-            prioridade: "Média",
-            status: "Pronto",
-            vinculadaA: "Fernanda Costa",
-            dataCreacao: "2024-01-03",
-            prazo: "2024-01-22"
-        }
-    ]);
+    const url = "http://127.0.0.1:3000/tasks";
+    const [tasks, setTasks] = useState([]);
 
     // USUÁRIOS SIMULADOS
     const usuarios = [
@@ -105,7 +19,33 @@ export default function GerenciamentoTarefas() {
         "DevOps", "Documentação", "Marketing", "Vendas"
     ];
 
-    const status = ["A Fazer","Fazendo","Pronto"];
+    const status = ["A Fazer", "Fazendo", "Pronto"];
+
+    async function viewTasks() {
+        try {
+            const response = await axios.get(url);
+            console.log(Object.values(response.data)?.[0]);
+            setTasks(response.data)
+        } catch (error) {
+            console.log("Erro ao buscar tarefas", error);
+            return error;
+        }
+    }
+
+
+
+    // async function deleteTask(id) {
+    //     try{
+    //         const response = await axios.delete(url/id);
+
+    //     }
+        
+    // }
+
+
+    useEffect(() => {
+        viewTasks()
+    }, [])
 
 
     return (
@@ -118,7 +58,7 @@ export default function GerenciamentoTarefas() {
 
                     <div className="cards-column">
 
-                        {tarefas.map(element => (
+                        {tasks.map(element => (
                             element.status == "A fazer" && (
 
                                 <div className="card-tarefa" key={element.id}>
@@ -166,7 +106,7 @@ export default function GerenciamentoTarefas() {
 
                     <div className="cards-column">
 
-                        {tarefas.map(element => (
+                        {tasks.map(element => (
                             element.status == "Fazendo" && (
 
                                 <div className="card-tarefa" key={element.id}>
@@ -213,7 +153,7 @@ export default function GerenciamentoTarefas() {
 
                     <div className="cards-column">
 
-                        {tarefas.map(element => (
+                        {tasks.map(element => (
                             element.status == "Pronto" && (
 
                                 <div className="card-tarefa" key={element.id}>

@@ -38,16 +38,14 @@
                 border-radius: 8px;
                 font-size: 1.1rem;
                 margin: 0 auto;
-                font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                margin-top: 10px;
             }
 
             .input{
                 display: flex;
                 flex-direction: column;
-                gap: 8px; /* Espaço entre label e input */
+                gap: 1rem;
             }
     
             input{
