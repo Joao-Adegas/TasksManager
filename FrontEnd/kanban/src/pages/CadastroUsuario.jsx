@@ -1,7 +1,7 @@
 import "../styles/CadUsuario.scss"
 import axios from "axios"
 import { useState,useEffect, useRef } from "react"
-
+import Swal from 'sweetalert2'
 
 export default function CadastroUsuario(){
     const [users,setUsers] = useState([]);    
@@ -11,14 +11,19 @@ export default function CadastroUsuario(){
     const createUsers = async(e)=>{
         e.preventDefault();
 
-        const taskData={
+        const userData={
             nome:nomeRef.current.value,
             email:emailRef.current.value
         }
 
         try{
-            const response = await axios.post("http://127.0.0.1:3000/users",taskData);
+            const response = await axios.post("http://127.0.0.1:3000/users",userData);
             console.log("Usuário criado com sucesso!!");
+            Swal.fire({
+                title: "Cadastro concluido com sucesso!",
+                icon: "success",
+                draggable: true
+            });
         }catch(e){
             console.log(e);
         }

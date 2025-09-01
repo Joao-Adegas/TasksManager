@@ -24,11 +24,22 @@ export default function GerenciamentoTarefas() {
     async function viewTasks() {
         try {
             const response = await axios.get(url);
-            console.log(Object.values(response.data)?.[0]);
+            console.table(Object.values(response.data)?.[0]);
             setTasks(response.data)
         } catch (error) {
             console.log("Erro ao buscar tarefas", error);
             return error;
+        }
+    }
+
+    const deleteTask = async (id) => {
+        try {
+            const response = await axios.delete(`http://127.0.0.1:3000/tasks/${id}`);
+            console.log("Tarefa deletada com sucesso");
+            viewTasks();
+        }
+        catch (e) {
+            console.log(e);
         }
     }
 
@@ -39,7 +50,7 @@ export default function GerenciamentoTarefas() {
     //         const response = await axios.delete(url/id);
 
     //     }
-        
+
     // }
 
 
@@ -57,47 +68,50 @@ export default function GerenciamentoTarefas() {
                     <h2>A fazer</h2>
 
                     <div className="cards-column">
+                        {tasks.some(task => task.status === "A fazer")? (
+                            tasks.map(element => (
+                                element.status == "A fazer" && (
 
-                        {tasks.map(element => (
-                            element.status == "A fazer" && (
+                                    <div className="card-tarefa" key={element.id}>
 
-                                <div className="card-tarefa" key={element.id}>
+                                        <div className="separador-campo">
+                                            <label className="label-campo">Descrição</label>
+                                            <span>{element.descricao}</span>
+                                        </div>
 
-                                    <div className="separador-campo">
-                                        <label className="label-campo">Descrição</label>
-                                        <span>{element.descricao}</span>
+                                        <div className="separador-campo">
+                                            <label className="label-campo">Setor</label>
+                                            <span>{element.setor}</span>
+                                        </div>
+
+                                        <div className="separador-campo">
+                                            <label className="label-campo">Prioridade</label>
+                                            <span>{element.prioridade}</span>
+                                        </div>
+
+                                        <div className="separador-campo">
+                                            <label className="label-campo">Vinculada A</label>
+                                            <span>{element.usuario}</span>
+                                        </div>
+
+                                        <div className="opt-actions">
+                                            <button>Editar</button>
+                                            <button onClick={() => deleteTask(element.id)}>Excluir</button>
+                                        </div>
+
+                                        <div className="separador-campo">
+                                            <select>
+                                                <option>{element.status}</option>
+                                            </select>
+                                            <button>Alterar Status</button>
+                                        </div>
                                     </div>
+                                )
 
-                                    <div className="separador-campo">
-                                        <label className="label-campo">Setor</label>
-                                        <span>{element.setor}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo">Prioridade</label>
-                                        <span>{element.prioridade}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo">Vinculada A</label>
-                                        <span>{element.vinculadaA}</span>
-                                    </div>
-
-                                    <div className="opt-actions">
-                                        <button>Editar</button>
-                                        <button>Excluir</button>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <select>
-                                            <option>{element.status}</option>
-                                        </select>
-                                        <button>Alterar Status</button>
-                                    </div>
-                                </div>
-                            )
-
-                        ))}
+                            ))
+                        ) : (
+                            <p>Nenhuma tarefa A fazer</p>
+                        )}
 
                     </div>
                 </div>
@@ -106,7 +120,7 @@ export default function GerenciamentoTarefas() {
 
                     <div className="cards-column">
 
-                        {tasks.map(element => (
+                        {tasks.some(task => task.status === "Fazendo") > 0 ? (tasks.map(element => (
                             element.status == "Fazendo" && (
 
                                 <div className="card-tarefa" key={element.id}>
@@ -128,12 +142,12 @@ export default function GerenciamentoTarefas() {
 
                                     <div className="separador-campo">
                                         <label className="label-campo">Vinculada A</label>
-                                        <span>{element.vinculadaA}</span>
+                                        <span>{element.usuario}</span>
                                     </div>
 
                                     <div className="opt-actions">
                                         <button>Editar</button>
-                                        <button>Excluir</button>
+                                        <button onClick={() => deleteTask(element.id)}>Excluir</button>
                                     </div>
 
                                     <div className="separador-campo">
@@ -143,9 +157,11 @@ export default function GerenciamentoTarefas() {
                                         <button>Alterar Status</button>
                                     </div>
                                 </div>
-                            )
+                            ))
 
-                        ))}
+                        )) : (
+                            <p>Nehuma tarefa fazendo</p>
+                        )}
                     </div>
                 </div>
                 <div className="coluna">
@@ -153,7 +169,7 @@ export default function GerenciamentoTarefas() {
 
                     <div className="cards-column">
 
-                        {tasks.map(element => (
+                        {tasks.some(task => task.status === "Pronto") ? (tasks.map(element => (
                             element.status == "Pronto" && (
 
                                 <div className="card-tarefa" key={element.id}>
@@ -175,12 +191,12 @@ export default function GerenciamentoTarefas() {
 
                                     <div className="separador-campo">
                                         <label className="label-campo">Vinculada A</label>
-                                        <span>{element.vinculadaA}</span>
+                                        <span>{element.usuario}</span>
                                     </div>
 
                                     <div className="opt-actions">
                                         <button>Editar</button>
-                                        <button>Excluir</button>
+                                        <button onClick={() => deleteTask(element.id)}>Excluir</button>
                                     </div>
 
                                     <div className="separador-campo">
@@ -190,9 +206,11 @@ export default function GerenciamentoTarefas() {
                                         <button>Alterar Status</button>
                                     </div>
                                 </div>
-                            )
+                            ))
 
-                        ))}
+                        )):(
+                            <p>Nenhuma tarefa concluida</p>
+                        )}
 
                     </div>
                 </div>

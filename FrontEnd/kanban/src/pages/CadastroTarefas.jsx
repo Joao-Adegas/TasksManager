@@ -2,10 +2,18 @@ import "../styles/CadTarefas.scss"
 import "../styles/CadUsuario.scss"
 import {useState,useEffect,useRef} from "react"
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default function CadastroTarefas(){
     const url = "http://127.0.0.1:3000/tasks";
     const [users,setUsers] = useState([]);
+
+    const descricaoRef = useRef();
+    const setorRef = useRef();
+    const usuarioRef = useRef();
+    const prioridadeRef = useRef();
+    const vinculoRef = useRef();
+
 
     const usuarios = [
         "João Silva", "Maria Santos", "Pedro Costa", "Ana Oliveira",
@@ -17,7 +25,7 @@ export default function CadastroTarefas(){
     async function viewUsers(){
         try{
             const response = await axios.get("http://127.0.0.1:3000/users");
-            console.log(Object.values(response.data));
+            console.table(Object.values(response.data));
             setUsers(response.data)
         }catch(e){
             console.log(e);
@@ -25,12 +33,26 @@ export default function CadastroTarefas(){
     
     }
 
-    async function createTask(taskData) {
+    const createTask = async(e) => {
+        e.preventDefault();
+
+        const taskData = {
+            descricao:descricaoRef.current.value,
+            setor:setorRef.current.value,
+            prioridade:prioridadeRef.current.value,
+            usuario: usuarioRef.current.value,
+        }
+
         try {
             const response = await axios.post(url, taskData)
-            console.log("Tarefa criada com sucesso!! ");
+            console.table("Tarefa criada com sucesso!! ");
+            Swal.fire({
+                title: "Tarefa criada com sucesso!",
+                icon: "success",
+                draggable: true
+            });
         } catch (e) {
-            return e
+            console.table(e)
         }
     }
 
@@ -48,17 +70,18 @@ export default function CadastroTarefas(){
 
                     <div className="input">
                         <label>Descrição</label>
-                        <input type="text"/>
+                        <input type="text" ref={descricaoRef}/>
                     </div>
 
                     <div className="input">
                         <label>Setor</label>
-                        <input type="text"/>
+                        <input type="text" ref={setorRef}/>
                     </div>
 
                     <div className="input">
                         <label>Usuário</label>
-                        <select>
+                        <select ref={usuarioRef}>
+                                <option defaultChecked>Selecione um Usuário</option>
                                 {users.map(a =>(
                                 <option value={a.nome} key={a.id}>{a.nome}</option>
                             ))}
@@ -68,13 +91,14 @@ export default function CadastroTarefas(){
 
                     <div className="input">
                         <label>Prioridade</label>
-                        <select>
+                        <select ref={prioridadeRef}>
+                            <option defaultChecked>Selecione uma prioridade</option>
                             {prioridade.map(a =>(
                                 <option value={a} key={a}>{a}</option>
                             ))}
                         </select>
                     </div>
-                    <button className="btn">Cadastrar</button>
+                    <button className="btn" type="submit">Cadastrar</button>
                 </form>
             </div>
         </section>

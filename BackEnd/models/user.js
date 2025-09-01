@@ -14,8 +14,8 @@ export const createUserSchema = {
   type:"object",
   required:["nome","email"],
   properties:{
-    nome:{type:"string"},
-    email:{type:"string",format:"email"}
+    nome:{type:"string", minLength: 5, errorMessage: "O campo nome exige no minimo 5 caracteres."},
+    email:{type:"string",format:"email", errorMessage: "O campo email precisa estar no formato de email."}
   },
   additionalProperties:false,
   errorMessage:{
