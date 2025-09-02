@@ -7,18 +7,6 @@ export default function GerenciamentoTarefas() {
     const url = "http://127.0.0.1:3000/tasks";
     const [tasks, setTasks] = useState([]);
 
-    // USUÁRIOS SIMULADOS
-    const usuarios = [
-        "João Silva", "Maria Santos", "Pedro Costa", "Ana Oliveira",
-        "Carlos Lima", "Lucia Ferreira", "Roberto Silva", "Fernanda Costa"
-    ];
-
-    // SETORES SIMULADOS
-    const setores = [
-        "Desenvolvimento", "Design/Frontend", "Backend", "QA",
-        "DevOps", "Documentação", "Marketing", "Vendas"
-    ];
-
     const status = ["A Fazer", "Fazendo", "Pronto"];
 
     async function viewTasks() {
@@ -42,17 +30,6 @@ export default function GerenciamentoTarefas() {
             console.log(e);
         }
     }
-
-
-
-    // async function deleteTask(id) {
-    //     try{
-    //         const response = await axios.delete(url/id);
-
-    //     }
-
-    // }
-
 
     useEffect(() => {
         viewTasks()
