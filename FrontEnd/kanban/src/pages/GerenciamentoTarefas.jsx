@@ -1,13 +1,58 @@
 import "../styles/GerenciamentoTarefas.scss"
 import React, { useState, useEffect } from 'react';
+import ModalComponent from "../components/Modal";
 import axios from "axios";
-import { viewTasks, createTask } from "../api/tasks";
+
 
 export default function GerenciamentoTarefas() {
     const url = "http://127.0.0.1:3000/tasks";
     const [tasks, setTasks] = useState([]);
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTask, setEditingTask] = useState(null); 
+    const [usuarios,setUsers] = useState([]);
     const status = ["A Fazer", "Fazendo", "Pronto"];
+
+
+
+    async function viewUsers(){
+        try{
+            const response = await axios.get("http://127.0.0.1:3000/users");
+            console.table(Object.values(response.data));
+            setUsers(response.data)
+        }catch(e){
+            console.log(e);
+        }
+    
+    }
+
+    const openEditModal = (task) => {
+        setEditingTask(task);
+        setIsModalOpen(true);
+        console.table("Modal Aberto");
+    };
+
+    const handleUpdateTask = () => {
+    const payload = {
+        descricao: editingTask.descricao,
+        setor: editingTask.setor,
+        prioridade: editingTask.prioridade,
+        usuario: editingTask.usuario,
+    };
+
+    updateTask(editingTask.id, payload);
+    };
+
+    const updateTask = async (id, updatedData) => {
+        
+        try {
+            await axios.patch(`http://127.0.0.1:3000/tasks/${id}`, updatedData);
+            console.log("Tarefa atualizada com sucesso!");
+            viewTasks();
+            setIsModalOpen(false); // fecha modal
+        } catch (e) {
+            console.error("Erro ao atualizar tarefa", e);
+        }
+    };
 
     async function viewTasks() {
         try {
@@ -17,6 +62,16 @@ export default function GerenciamentoTarefas() {
         } catch (error) {
             console.log("Erro ao buscar tarefas", error);
             return error;
+        }
+    }
+
+    const editTask = async (id) => {
+        try {
+            const response = await axios.patch(`http://127.0.0.1:3000/tasks/${id}`)
+            console.table("Tarefa editada com sucesso");
+            viewTasks();
+        } catch (e) {
+            console.table("Erro ao tentar tarefa");
         }
     }
 
@@ -33,6 +88,7 @@ export default function GerenciamentoTarefas() {
 
     useEffect(() => {
         viewTasks()
+        viewUsers()
     }, [])
 
 
@@ -45,7 +101,7 @@ export default function GerenciamentoTarefas() {
                     <h2>A fazer</h2>
 
                     <div className="cards-column">
-                        {tasks.some(task => task.status === "A fazer")? (
+                        {tasks.some(task => task.status === "A fazer") ? (
                             tasks.map(element => (
                                 element.status == "A fazer" && (
 
@@ -72,7 +128,7 @@ export default function GerenciamentoTarefas() {
                                         </div>
 
                                         <div className="opt-actions">
-                                            <button>Editar</button>
+                                            <button onClick={() => openEditModal(element)}>Editar</button>
                                             <button onClick={() => deleteTask(element.id)}>Excluir</button>
                                         </div>
 
@@ -185,13 +241,79 @@ export default function GerenciamentoTarefas() {
                                 </div>
                             ))
 
-                        )):(
+                        )) : (
                             <p>Nenhuma tarefa concluida</p>
                         )}
 
                     </div>
                 </div>
+
+                {isModalOpen &&(
+                    <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} >
+                        <h2>Editar Tarefa</h2>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleUpdateTask();
+                            }}
+                        >
+                            <label>Descrição</label>
+                            <input
+                                type="text"
+                                value={editingTask.descricao}
+                                onChange={(e) =>
+                                    setEditingTask({ ...editingTask, descricao: e.target.value })
+                                }
+                            />
+
+                            <label>Setor</label>
+                            <input
+                                type="text"
+                                value={editingTask.setor}
+                                onChange={(e) =>
+                                    setEditingTask({ ...editingTask, setor: e.target.value })
+                                }
+                            />
+
+                            <label>Prioridade</label>
+                            <select
+                                value={editingTask.prioridade}
+                                onChange={(e) =>
+                                    setEditingTask({ ...editingTask, prioridade: e.target.value })
+                                }
+                            >
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Média</option>
+                                <option value="Baixa">Baixa</option>
+                            </select>
+
+                            <label>Usuário</label>
+                            <select
+                            value={editingTask.usuario}
+                            onChange={(e) =>
+                                setEditingTask({ ...editingTask, usuario: e.target.value })
+                            }
+                            >
+                            <option value="">Escolha um usuário</option>
+                            {usuarios.map((user) => (
+                                <option key={user.id} value={user.id}>
+                                {user.nome}
+                                </option>
+                            ))}
+                            </select>
+
+                            <div className="btns">
+                                <button type="submit" className="saveButton">Salvar</button>
+                                <button onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom">Sair</button>
+                            </div>
+                        </form>
+                    </ModalComponent>
+                )}
+
+
             </div>
+
+
         </section>
     )
 }
