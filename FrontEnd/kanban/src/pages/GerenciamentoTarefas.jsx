@@ -49,7 +49,7 @@ export default function GerenciamentoTarefas() {
             await axios.patch(`http://127.0.0.1:3000/tasks/${id}`, updatedData);
             console.log("Tarefa atualizada com sucesso!");
             viewTasks();
-            setIsModalOpen(false); 
+            setIsModalOpen(false);
         } catch (e) {
             console.error("Erro ao atualizar tarefa", e);
         }
@@ -120,7 +120,9 @@ export default function GerenciamentoTarefas() {
 
                                         <div className="separador-campo">
                                             <label className="label-campo">Vinculada A</label>
-                                            <span>{element.usuario}</span>
+                                            <span>
+                                                {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
+                                            </span>
                                         </div>
 
                                         <div className="opt-actions">
@@ -179,11 +181,13 @@ export default function GerenciamentoTarefas() {
 
                                     <div className="separador-campo">
                                         <label className="label-campo">Vinculada A</label>
-                                        <span>{element.usuario}</span>
+                                        <span>
+                                            {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
+                                        </span>
                                     </div>
 
                                     <div className="opt-actions">
-                                        <button>Editar</button>
+                                        <button onClick={() => openEditModal(element)}>Editar</button>
                                         <button onClick={() => deleteTask(element.id)}>Excluir</button>
                                     </div>
 
@@ -236,11 +240,13 @@ export default function GerenciamentoTarefas() {
 
                                     <div className="separador-campo">
                                         <label className="label-campo">Vinculada A</label>
-                                        <span>{element.usuario}</span>
+                                        <span>
+                                            {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
+                                        </span>
                                     </div>
 
                                     <div className="opt-actions">
-                                        <button>Editar</button>
+                                        <button onClick={() => openEditModal(element)}>Editar</button>
                                         <button onClick={() => deleteTask(element.id)}>Excluir</button>
                                     </div>
 
@@ -323,7 +329,7 @@ export default function GerenciamentoTarefas() {
                             </select>
 
                             <div className="btns">
-                                <button type="submit" className="saveButton">Salvar</button>
+                                <button type="submit" className="saveButton">Fechar</button>
                                 <button onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom">Sair</button>
                             </div>
                         </form>
