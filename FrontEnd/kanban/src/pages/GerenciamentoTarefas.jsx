@@ -4,6 +4,11 @@ import ModalComponent from "../components/Modal";
 import axios from "axios";
 import Swal from 'sweetalert2'
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+
 export default function GerenciamentoTarefas() {
     const url = "http://127.0.0.1:3000/tasks";
     const [tasks, setTasks] = useState([]);
@@ -13,6 +18,31 @@ export default function GerenciamentoTarefas() {
     const [selectedStatus, setSelectedStatus] = useState("");
     const [statusChanges, setStatusChanges] = useState({});
 
+    const editSchema  = z.object({
+        descricao: z.string().regex(/^.{5,}$/, {
+            message: "A descrição deve conter no minimo 5 caracteres"
+        }),
+        setor: z.string().regex(/^.{2,}$/, {
+            message: "O setor deve conter ao menos 2 caracteres"
+        }),
+           usuario: z.preprocess(
+                (val) => Number(val), // converte a string do select para number
+                z.number().int().min(1, "Escolha um usuário")
+            ),
+        prioridade: z.string().regex(/^(Alta|Media|Baixa)$/, {
+            message: "A prioridade deve ser apenas Alta, Baixa ou Media"
+        })
+    })
+
+    const {
+        register: editRegister,
+        handleSubmit: handleEditSubmit,
+        formState: { errors: editErrors },
+        reset: resetEditForm
+    } = useForm({
+        resolver: zodResolver(editSchema),
+        defaultValues: editingTask || {}
+    });
 
     async function viewUsers() {
         try {
@@ -29,15 +59,17 @@ export default function GerenciamentoTarefas() {
     const openEditModal = (task) => {
         setEditingTask(task);
         setIsModalOpen(true);
-        console.table("Modal Aberto");
+        resetEditForm(task); // atualiza os valores do formulário com a tarefa atual
+        console.table("Modal aberto");
     };
 
-    const handleUpdateTask = () => {
+
+    const handleUpdateTask = (data) => {
         const payload = {
-            descricao: editingTask.descricao,
-            setor: editingTask.setor,
-            prioridade: editingTask.prioridade,
-            usuario: editingTask.usuario,
+            descricao: data.descricao,
+            setor: data.setor,
+            prioridade: data.prioridade,
+            usuario: Number(data.usuario) // converte para número se o backend espera number
         };
 
         updateTask(editingTask.id, payload);
@@ -277,49 +309,25 @@ export default function GerenciamentoTarefas() {
                 {isModalOpen && (
                     <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} >
                         <h2>Editar Tarefa</h2>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleUpdateTask();
-                            }}
-                        >
+                        <form onSubmit={handleEditSubmit((data) => handleUpdateTask(data))}>
                             <label>Descrição</label>
-                            <input
-                                type="text"
-                                value={editingTask.descricao}
-                                onChange={(e) =>
-                                    setEditingTask({ ...editingTask, descricao: e.target.value })
-                                }
-                            />
+                            <input type="text" {...editRegister("descricao")} />
+                            {editErrors.descricao && <span className="error">{editErrors.descricao.message}</span>}
 
                             <label>Setor</label>
-                            <input
-                                type="text"
-                                value={editingTask.setor}
-                                onChange={(e) =>
-                                    setEditingTask({ ...editingTask, setor: e.target.value })
-                                }
-                            />
+                            <input type="text" {...editRegister("setor")} />
+                            {editErrors.setor && <span className="error">{editErrors.setor.message}</span>}
 
                             <label>Prioridade</label>
-                            <select
-                                value={editingTask.prioridade}
-                                onChange={(e) =>
-                                    setEditingTask({ ...editingTask, prioridade: e.target.value })
-                                }
-                            >
+                            <select {...editRegister("prioridade")}>
                                 <option value="Alta">Alta</option>
                                 <option value="Media">Média</option>
                                 <option value="Baixa">Baixa</option>
                             </select>
+                            {editErrors.prioridade && <span className="error">{editErrors.prioridade.message}</span>}
 
                             <label>Usuário</label>
-                            <select
-                                value={editingTask.usuario}
-                                onChange={(e) =>
-                                    setEditingTask({ ...editingTask, usuario: e.target.value })
-                                }
-                            >
+                            <select {...editRegister("usuario")}>
                                 <option value="">Escolha um usuário</option>
                                 {usuarios.map((user) => (
                                     <option key={user.id} value={user.id}>
@@ -327,12 +335,14 @@ export default function GerenciamentoTarefas() {
                                     </option>
                                 ))}
                             </select>
+                            {editErrors.usuario && <span className="error">{editErrors.usuario.message}</span>}
 
                             <div className="btns">
-                                <button type="submit" className="saveButton">Fechar</button>
-                                <button onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom">Sair</button>
+                                <button type="submit" className="saveButton">Salvar</button>
+                                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom">Fechar</button>
                             </div>
                         </form>
+
                     </ModalComponent>
                 )}
 

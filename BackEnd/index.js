@@ -81,7 +81,7 @@ fastify.post('/tasks', {
     const { descricao,setor,usuario,prioridade,status} = req.body;
     
     const users = readUser()
-    const userExist = users.some(u => u.nome === usuario)
+    const userExist = users.some(u => u.id === usuario)
     if(!userExist){
         return reply.status(400).send({error:"Este usuário não existe"})
     }
@@ -103,7 +103,7 @@ fastify.patch("/tasks/:id",{
             properties:{
                 descricao:{type:"string"},
                 setor:{type:"string"},
-                usuario:{type:"string"},
+                usuario:{type:"number"},
                 prioridade:{type:"string",enum:['Alta','Media','Baixa']},
                 status:{type:"string",enum:['A Fazer','Fazendo','Pronto']}
             },
@@ -121,14 +121,13 @@ fastify.patch("/tasks/:id",{
         return reply.status(404).send({error:"Tarefa não encontrada"})
     }
 
-    if (updates.usuario) {
-        const users = readUser()
-        const userExist = users.some(u => u.id == updates.usuario) // note o == para comparar string x number
-        if(!userExist){
-            return reply.status(400).send({error:`Usuário com id ${updates.usuario} não existe!!`})
+    if (updates.usuarioId) {
+        const users = readUser();
+        const userExist = users.some(u => u.id == updates.usuarioId);
+        if (!userExist) {
+            return reply.status(400).send({ error:`Usuário com id ${updates.usuarioId} não existe!!` });
         }
     }
-
 
     Object.keys(updates).forEach(key =>{
         task[key] = updates[key]

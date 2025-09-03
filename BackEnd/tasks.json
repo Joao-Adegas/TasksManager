@@ -1,10 +1,10 @@
 [
   {
     "id": 1,
-    "descricao": "asxasxas",
-    "setor": "asxasxas",
-    "usuario": "gabi ",
+    "descricao": "Terminar de organiar a aula de Regex",
+    "setor": "Senai",
+    "usuario": 1,
     "prioridade": "Alta",
-    "status": "A fazer"
+    "status": "Fazendo"
   }
 ]

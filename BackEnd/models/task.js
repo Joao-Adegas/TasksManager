@@ -5,7 +5,7 @@ export const taskModel = {
         id:{type:"number"},
         descricao: {type:"string"},
         setor:{type:"string"},
-        usuario:{type:"string"},
+        usuario:{type:"number"},
         prioridade:{
             type:"string",
             enum:["Alta","Media","Baixa"]
@@ -23,7 +23,7 @@ export const createTaskSchema = {
   properties: {
     descricao: { type: "string", minLength: 5, errorMessage: "O campo descrição exige no minimo 5 caracteres"} ,
     setor: { type: "string", minLength: 2, errorMessage: "O campo setor exige no minimo 2 caracteres"},
-    usuario: { type: "string" , minLength: 3, errorMessage: "O campo usuario exige no minimo 3 caracteres"},
+    usuario: { type: "number" , minLength: 3, errorMessage: "O campo usuario exige no minimo 3 caracteres"},
     prioridade: { 
         type: "string", 
         enum: ["Alta", "Media", "Baixa"],
