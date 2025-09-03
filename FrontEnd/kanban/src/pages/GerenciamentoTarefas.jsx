@@ -2,27 +2,28 @@ import "../styles/GerenciamentoTarefas.scss"
 import React, { useState, useEffect } from 'react';
 import ModalComponent from "../components/Modal";
 import axios from "axios";
-
+import Swal from 'sweetalert2'
 
 export default function GerenciamentoTarefas() {
     const url = "http://127.0.0.1:3000/tasks";
     const [tasks, setTasks] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingTask, setEditingTask] = useState(null); 
-    const [usuarios,setUsers] = useState([]);
-    const status = ["A Fazer", "Fazendo", "Pronto"];
+    const [editingTask, setEditingTask] = useState(null);
+    const [usuarios, setUsers] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const [statusChanges, setStatusChanges] = useState({});
 
 
-
-    async function viewUsers(){
-        try{
+    async function viewUsers() {
+        try {
             const response = await axios.get("http://127.0.0.1:3000/users");
             console.table(Object.values(response.data));
             setUsers(response.data)
-        }catch(e){
+            console.table(response.data)
+        } catch (e) {
             console.log(e);
         }
-    
+
     }
 
     const openEditModal = (task) => {
@@ -32,23 +33,23 @@ export default function GerenciamentoTarefas() {
     };
 
     const handleUpdateTask = () => {
-    const payload = {
-        descricao: editingTask.descricao,
-        setor: editingTask.setor,
-        prioridade: editingTask.prioridade,
-        usuario: editingTask.usuario,
-    };
+        const payload = {
+            descricao: editingTask.descricao,
+            setor: editingTask.setor,
+            prioridade: editingTask.prioridade,
+            usuario: editingTask.usuario,
+        };
 
-    updateTask(editingTask.id, payload);
+        updateTask(editingTask.id, payload);
     };
 
     const updateTask = async (id, updatedData) => {
-        
+
         try {
             await axios.patch(`http://127.0.0.1:3000/tasks/${id}`, updatedData);
             console.log("Tarefa atualizada com sucesso!");
             viewTasks();
-            setIsModalOpen(false); // fecha modal
+            setIsModalOpen(false); 
         } catch (e) {
             console.error("Erro ao atualizar tarefa", e);
         }
@@ -65,21 +66,16 @@ export default function GerenciamentoTarefas() {
         }
     }
 
-    const editTask = async (id) => {
-        try {
-            const response = await axios.patch(`http://127.0.0.1:3000/tasks/${id}`)
-            console.table("Tarefa editada com sucesso");
-            viewTasks();
-        } catch (e) {
-            console.table("Erro ao tentar tarefa");
-        }
-    }
-
     const deleteTask = async (id) => {
         try {
             const response = await axios.delete(`http://127.0.0.1:3000/tasks/${id}`);
             console.log("Tarefa deletada com sucesso");
             viewTasks();
+            Swal.fire({
+                title: "Terafa deletada com sucesso!",
+                icon: "success",
+                draggable: true
+            });
         }
         catch (e) {
             console.log(e);
@@ -101,9 +97,9 @@ export default function GerenciamentoTarefas() {
                     <h2>A fazer</h2>
 
                     <div className="cards-column">
-                        {tasks.some(task => task.status === "A fazer") ? (
+                        {tasks.some(task => task.status === "A Fazer") ? (
                             tasks.map(element => (
-                                element.status == "A fazer" && (
+                                element.status == "A Fazer" && (
 
                                     <div className="card-tarefa" key={element.id}>
 
@@ -133,10 +129,18 @@ export default function GerenciamentoTarefas() {
                                         </div>
 
                                         <div className="separador-campo">
-                                            <select>
-                                                <option>{element.status}</option>
+                                            <select value={element.status} onChange={(e) => setStatusChanges({
+                                                ...statusChanges,
+                                                [element.id]: e.target.value
+                                            })}>
+                                                <option value="A Fazer">A fazer</option>
+                                                <option value="Fazendo">Fazendo</option>
+                                                <option value="Pronto">Pronto</option>
                                             </select>
-                                            <button>Alterar Status</button>
+                                            <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}>
+                                                Alterar Status
+                                            </button>
+
                                         </div>
                                     </div>
                                 )
@@ -184,10 +188,18 @@ export default function GerenciamentoTarefas() {
                                     </div>
 
                                     <div className="separador-campo">
-                                        <select>
-                                            <option>{element.status}</option>
+                                        <select value={element.status} onChange={(e) => setStatusChanges({
+                                            ...statusChanges,
+                                            [element.id]: e.target.value
+                                        })}>
+                                            <option value="A Fazer">A fazer</option>
+                                            <option value="Fazendo">Fazendo</option>
+                                            <option value="Pronto">Pronto</option>
                                         </select>
-                                        <button>Alterar Status</button>
+                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}>
+                                            Alterar Status
+                                        </button>
+
                                     </div>
                                 </div>
                             ))
@@ -233,10 +245,18 @@ export default function GerenciamentoTarefas() {
                                     </div>
 
                                     <div className="separador-campo">
-                                        <select>
-                                            <option>{element.status}</option>
+                                        <select value={element.status} onChange={(e) => setStatusChanges({
+                                            ...statusChanges,
+                                            [element.id]: e.target.value
+                                        })}>
+                                            <option value="A Fazer">A fazer</option>
+                                            <option value="Fazendo">Fazendo</option>
+                                            <option value="Pronto">Pronto</option>
                                         </select>
-                                        <button>Alterar Status</button>
+                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}>
+                                            Alterar Status
+                                        </button>
+
                                     </div>
                                 </div>
                             ))
@@ -248,7 +268,7 @@ export default function GerenciamentoTarefas() {
                     </div>
                 </div>
 
-                {isModalOpen &&(
+                {isModalOpen && (
                     <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} >
                         <h2>Editar Tarefa</h2>
                         <form
@@ -289,17 +309,17 @@ export default function GerenciamentoTarefas() {
 
                             <label>Usuário</label>
                             <select
-                            value={editingTask.usuario}
-                            onChange={(e) =>
-                                setEditingTask({ ...editingTask, usuario: e.target.value })
-                            }
+                                value={editingTask.usuario}
+                                onChange={(e) =>
+                                    setEditingTask({ ...editingTask, usuario: e.target.value })
+                                }
                             >
-                            <option value="">Escolha um usuário</option>
-                            {usuarios.map((user) => (
-                                <option key={user.id} value={user.id}>
-                                {user.nome}
-                                </option>
-                            ))}
+                                <option value="">Escolha um usuário</option>
+                                {usuarios.map((user) => (
+                                    <option key={user.id} value={user.id}>
+                                        {user.nome}
+                                    </option>
+                                ))}
                             </select>
 
                             <div className="btns">
