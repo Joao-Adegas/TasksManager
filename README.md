@@ -1,37 +1,35 @@
-# 📝 TaskManager
+# TaskManager
 
-Bem-vindo ao **TaskManager**, um gerenciador de tarefas moderno e eficiente desenvolvido com **Fastify** no backend e **React** no frontend. Este projeto foi criado para ajudar você a organizar suas tarefas diárias com rapidez, leveza e estilo.
-
----
-
-## 🚀 Tecnologias Utilizadas
-
-- ⚡ **Fastify** – Framework web rápido e leve para Node.js
-- ⚛️ **React** – Biblioteca JavaScript para construção de interfaces de usuário
-- 📦 **NPM** – Gerenciador de pacotes para instalação de dependências
-- 🧠 **JavaScript** – Linguagem principal do projeto
+Welcome to **TaskManager**, a modern and efficient task manager developed with **Fastify** on the backend and **React** on the frontend. This project was created to help you organize your daily tasks with speed, lightness, and style.
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🚀 Technologies Used
+
+- ⚡ **Fastify** – Fast and lightweight web framework for Node.js
+- ⚛️ **React** – JavaScript library for building user interfaces
+- 📦 **NPM** – Package manager for dependency installation
+- 🧠 **JavaScript** – Main project language
+
+---
+
+## 📁 Project Structure
 
 ```bash
 taskmanager/
-├── backend/           # API com Fastify
-│   ├── index.js       # Arquivo principal do servidor
-│   └── routes/        # Rotas da API (tarefas e usuários)
-├── frontend/          # Interface com React
+├── backend/           # API with Fastify
+│   ├── index.js       # Main server file
+│   └── routes/        # API routes (tasks and users)
+├── frontend/          # Interface with React
 │   ├── src/
-│   │   ├── App.jsx    # Componente principal
-│   │   └── components/ # Componentes reutilizáveis
-└── README.md          # Documentação do projeto
+│   │   ├── App.jsx    # Main component
+│   │   └── components/ # Reusable components
+└── README.md          # Project documentation
 ```
 
-# Funcionalidades
+---
 
-- ⚡ **Gerenciamento de Usuarios** – Criação de Usuários ( nome, email)  para monitoriar cada tarefa.
-- ⚛️ **Gerenciamento de Tarefas** – CRUD completo de tarefas, definindo seus usuários responsáveis. Podendo alterar seus status de cada tarefa com as categorias "A fazer","Fazendo" e "Pronto".
+## Features
 
-
-
-
+- ⚡ **User Management** – User creation (name, email) to monitor each task.
+- ⚛️ **Task Management** – Complete CRUD operations for tasks, defining their responsible users. Ability to change the status of each task with the categories "To Do", "Doing", and "Done".
