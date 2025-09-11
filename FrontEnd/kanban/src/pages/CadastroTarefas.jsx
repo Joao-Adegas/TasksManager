@@ -15,11 +15,17 @@ export default function CadastroTarefas() {
     const prioridade = ["Alta", "Media", "Baixa"];
 
     const schema = z.object({
-        descricao: z.string().regex(/^.{5,}$/,{
-            message:"A descrição deve conter no minimo 5 caracteres"
+        descricao: z.string().regex(/^.{5,25}$/,{
+            message:"Minimo de 5 caracteres e maximo de 25"
+        })
+        .regex(/[A-Za-z0-9 ]/,{
+            message:"Sem caracteres especiais"
         }),
-        setor: z.string().regex(/^.{2,}$/,{
-            message:"O setor deve conter ao menos 2 caracteres"
+        setor: z.string().regex(/^(?!.* {2,}){2,15}$/,{
+            message:"O setor deve conter ao menos 2 caracteres e maximo de 15"
+        })
+        .regex(/[A-Za-z0-9]/,{
+            message:"Sem caracteres especiais"
         }),
         usuario: z.string().nonempty("Escolha um usuário"),
         prioridade: z.string().regex(/^(Alta|Media|Baixa)$/,{
@@ -75,13 +81,13 @@ export default function CadastroTarefas() {
 
                     <div className="input">
                         <label>Descrição</label>
-                        <input type="text" {...register("descricao")} />
+                        <input type="text" {...register("descricao")} maxLength={29}/>
                         {errors.descricao && <span className="error">{errors.descricao.message}</span>}
                     </div>
 
                     <div className="input">
                         <label>Setor</label>
-                        <input type="text" {...register("setor")} />
+                        <input type="text" {...register("setor")} maxLength={29}/>
                         {errors.setor && <span className="error">{errors.setor.message}</span>}
                     </div>
 

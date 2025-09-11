@@ -19,10 +19,10 @@ export default function GerenciamentoTarefas() {
     const [statusChanges, setStatusChanges] = useState({});
 
     const editSchema  = z.object({
-        descricao: z.string().regex(/^.{5,}$/, {
-            message: "A descrição deve conter no minimo 5 caracteres"
+        descricao: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, {
+            message: "A descrição deve conter no minimo 5 caracteres. Apenas numeros"
         }),
-        setor: z.string().regex(/^.{2,}$/, {
+        setor: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, {
             message: "O setor deve conter ao menos 2 caracteres"
         }),
            usuario: z.preprocess(

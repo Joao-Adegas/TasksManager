@@ -13,10 +13,14 @@ export default function CadastroUsuario() {
     const schema = z.object({
         nome: z.string()
             .regex(/^[A-Za-zÀ-ÿ]+$/, { message: "Digite apenas letras e sem espaços" }) /*Espaços tambem são caracteres*/
-            .regex(/^.{3,}$/, { message: "Mínimo de 3 caracteres" }),
+            .regex(/^.{3,9}$/, { message: "Mínimo de 3 caracteres e maximo 9." }),
 
-        email: z.string().regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
-            message: "Email inválido"
+        email: z.string()
+        .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
+            message: "Email deve estar no formato correto."
+        })
+        .regex(/^.{2,29}$/,{
+            message:"Minimo de 2 caracteres e maximo de 9"
         })
     })
 
@@ -78,13 +82,13 @@ export default function CadastroUsuario() {
 
                     <div className="input">
                         <label>Nome:</label>
-                        <input type="text" {...register("nome")} />
+                        <input type="text" {...register("nome")} maxLength={29}/>
                         {errors.nome && <span className="error">{errors.nome.message}</span>}
                     </div>
 
                     <div className="input">
                         <label>Email:</label>
-                        <input type="text" {...register("email")} />
+                        <input type="text" {...register("email")} maxLength={29}/>
                         {errors.email && <span className="error">{errors.email.message}</span>}
                         {error && <span className="error">{error}</span>}
                     </div>
