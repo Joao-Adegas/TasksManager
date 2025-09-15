@@ -15,17 +15,19 @@ export default function CadastroTarefas() {
     const prioridade = ["Alta", "Media", "Baixa"];
 
     const schema = z.object({
-        descricao: z.string().regex(/^.{5,25}$/,{
-            message:"Minimo de 5 caracteres e maximo de 25"
+        descricao: z.string()
+        .regex(/^.{5,25}$/, {
+            message: "Minimo de 5 caracteres e maximo de 25"
         })
-        .regex(/[A-Za-z0-9 ]/,{
-            message:"Sem caracteres especiais"
-        }),
-        setor: z.string().regex(/^(?!.* {2,}){2,15}$/,{
-            message:"O setor deve conter ao menos 2 caracteres e maximo de 15"
+        .regex(/^(?!.*\s{2,})[A-Za-zÀ-ÿ ]+$/, {
+            message: "Somente letras e espaços (sem números, caracteres especiais ou dois espaços seguidos)."
         })
-        .regex(/[A-Za-z0-9]/,{
-            message:"Sem caracteres especiais"
+        ,
+        setor: z.string()
+        .min(2, { message: "O setor deve ter ao menos 2 caracteres." })
+        .max(15, { message: "O setor pode ter no máximo 15 caracteres." })
+        .regex(/^(?!.*\s{2,})[A-Za-zÀ-ÿ0-9 ]+$/, {
+            message: "Sem caracteres especiais; não permite dois espaços seguidos."
         }),
         usuario: z.string().nonempty("Escolha um usuário"),
         prioridade: z.string().regex(/^(Alta|Media|Baixa)$/,{
