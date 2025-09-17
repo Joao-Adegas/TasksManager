@@ -3,5 +3,20 @@
     "id": 1,
     "nome": "João Adegas",
     "email": "pedrojoao6378@gmail.com"
+  },
+  {
+    "id": 2,
+    "nome": "filha um",
+    "email": "fernanda.fretes@senai.sp.br"
+  },
+  {
+    "id": 3,
+    "nome": "Fernanda Militã",
+    "email": "fernanda.fretes@senaisp.br"
+  },
+  {
+    "id": 4,
+    "nome": "joaoAdegas",
+    "email": "fer@email.com"
   }
 ]

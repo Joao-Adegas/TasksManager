@@ -13,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
               <Route path='/' element={<Layout/>}>
+                <Route index element ={<GerenciamentoTarefas/>}/>
                 <Route path="cadusuario" index element={<CadastroUsuario/>}/>
                 <Route path="cadtarefas" element={<CadastroTarefas/>}/>
                 <Route path="gerenciamento_tarefas" element={<GerenciamentoTarefas/>}/>
