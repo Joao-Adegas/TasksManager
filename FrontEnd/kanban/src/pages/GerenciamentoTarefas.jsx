@@ -18,17 +18,17 @@ export default function GerenciamentoTarefas() {
     const [selectedStatus, setSelectedStatus] = useState("");
     const [statusChanges, setStatusChanges] = useState({});
 
-    const editSchema  = z.object({
+    const editSchema = z.object({
         descricao: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, {
             message: "A descrição deve conter no minimo 5 caracteres. Apenas numeros"
         }),
         setor: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, {
             message: "O setor deve conter ao menos 2 caracteres"
         }),
-           usuario: z.preprocess(
-                (val) => Number(val), // converte a string do select para number
-                z.number().int().min(1, "Escolha um usuário")
-            ),
+        usuario: z.preprocess(
+            (val) => Number(val), // converte a string do select para number
+            z.number().int().min(1, "Escolha um usuário")
+        ),
         prioridade: z.string().regex(/^(Alta|Media|Baixa)$/, {
             message: "A prioridade deve ser apenas Alta, Baixa ou Media"
         })
@@ -136,22 +136,22 @@ export default function GerenciamentoTarefas() {
                                     <div className="card-tarefa" key={element.id}>
 
                                         <div className="separador-campo">
-                                            <label className="label-campo">Descrição</label>
+                                            <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
                                             <span>{element.descricao}</span>
                                         </div>
 
                                         <div className="separador-campo">
-                                            <label className="label-campo">Setor</label>
+                                            <label className="label-campo" aria-label="Setor da tarefa">Setor</label>
                                             <span>{element.setor}</span>
                                         </div>
 
                                         <div className="separador-campo">
-                                            <label className="label-campo">Prioridade</label>
+                                            <label className="label-campo" aria-label="Nível de prioridade">Prioridade</label>
                                             <span>{element.prioridade}</span>
                                         </div>
 
                                         <div className="separador-campo">
-                                            <label className="label-campo">Vinculada A</label>
+                                            <label className="label-campo" aria-label="Vinculo da tarefa">Vinculada A</label>
                                             <span>
                                                 {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
                                             </span>
@@ -171,7 +171,7 @@ export default function GerenciamentoTarefas() {
                                                 <option value="Fazendo">Fazendo</option>
                                                 <option value="Pronto">Pronto</option>
                                             </select>
-                                            <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}>
+                                            <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} aria-label="Alterar Status">
                                                 Alterar Status
                                             </button>
 
@@ -197,30 +197,30 @@ export default function GerenciamentoTarefas() {
                                 <div className="card-tarefa" key={element.id}>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Descrição</label>
+                                        <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
                                         <span>{element.descricao}</span>
                                     </div>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Setor</label>
+                                        <label className="label-campo" aria-label="Setor da tarefa">Setor</label>
                                         <span>{element.setor}</span>
                                     </div>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Prioridade</label>
+                                        <label className="label-campo" aria-label="Prioridade da tarefa" >Prioridade</label>
                                         <span>{element.prioridade}</span>
                                     </div>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Vinculada A</label>
+                                        <label className="label-campo" aria-label="Vinculo da tarefa">Vinculada A</label>
                                         <span>
                                             {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
                                         </span>
                                     </div>
 
                                     <div className="opt-actions">
-                                        <button onClick={() => openEditModal(element)}>Editar</button>
-                                        <button onClick={() => deleteTask(element.id)}>Excluir</button>
+                                        <button onClick={() => openEditModal(element)} aria-label="Editar tarefa">Editar</button>
+                                        <button onClick={() => deleteTask(element.id)} aria-label="Excluir tarefa">Excluir</button>
                                     </div>
 
                                     <div className="separador-campo">
@@ -232,7 +232,7 @@ export default function GerenciamentoTarefas() {
                                             <option value="Fazendo">Fazendo</option>
                                             <option value="Pronto">Pronto</option>
                                         </select>
-                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}>
+                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} aria-label="Alterar Status">
                                             Alterar Status
                                         </button>
 
@@ -241,7 +241,7 @@ export default function GerenciamentoTarefas() {
                             ))
 
                         )) : (
-                            <p>Nehuma tarefa fazendo</p>
+                            <p>Nehuma tarefa</p>
                         )}
                     </div>
                 </div>
@@ -256,21 +256,21 @@ export default function GerenciamentoTarefas() {
                                 <div className="card-tarefa" key={element.id}>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Descrição</label>
+                                        <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
                                         <span>{element.descricao}</span>
                                     </div>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Setor</label>
+                                        <label className="label-campo" aria-label="Setor da Tarefa">Setor</label>
                                         <span>{element.setor}</span>
                                     </div>
 
                                     <div className="separador-campo">
-                                        <label className="label-campo">Prioridade</label>
+                                        <label className="label-campo" aria-label="Prioridade da Tarefa">Prioridade</label>
                                         <span>{element.prioridade}</span>
                                     </div>
 
-                                    <div className="separador-campo">
+                                    <div className="separador-campo" aria-label="Vinculo da tarefa">
                                         <label className="label-campo">Vinculada A</label>
                                         <span>
                                             {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
@@ -291,7 +291,7 @@ export default function GerenciamentoTarefas() {
                                             <option value="Fazendo">Fazendo</option>
                                             <option value="Pronto">Pronto</option>
                                         </select>
-                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}>
+                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} aria-label="Alterar Status">
                                             Alterar Status
                                         </button>
 
