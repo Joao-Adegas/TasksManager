@@ -55,17 +55,26 @@
                 border-radius: 8px;
                 font-size: 1rem;
                 transition: all 0.3s ease;
-                outline: none;
-
+                outline-color:$azul-padrao;
+            }   
+            input:hover{
+                outline-color:$azul-padrao;
             }
             
             button{
                 border: none;
                 padding: 0.5rem;
-                border-radius: 5px;
+                border-radius: 5px;         
                 color: #ffffff;
                 background-color: $azul-padrao;
+                outline-color: $azul-padrao;
+                outline-offset: 0.2rem;
             }
+            button:focus{
+                color: white;
+                border: 1px solid white;
+            }
+
 
         }
     }

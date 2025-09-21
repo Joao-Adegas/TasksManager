@@ -5,6 +5,22 @@
     "setor": "Senai",
     "usuario": 1,
     "prioridade": "Alta",
+    "status": "Pronto"
+  },
+  {
+    "id": 2,
+    "descricao": "asxasxaxs",
+    "setor": "sasxaxs",
+    "usuario": 1,
+    "prioridade": "Media",
+    "status": "A Fazer"
+  },
+  {
+    "id": 3,
+    "descricao": "xaqsa",
+    "setor": "xsaxasx",
+    "usuario": 1,
+    "prioridade": "Media",
     "status": "Fazendo"
   }
 ]

@@ -51,7 +51,8 @@
                 color: white;
                 padding: 0.5rem;
                 border: none;
-                outline: none;
+                outline-offset: 0.2rem;
+                outline-color: $azul-padrao;
                 border-radius: 0.3rem;
                 cursor: pointer;
     
@@ -85,12 +86,13 @@
 
 }
 
+
 @media (max-width: 900px) {
   .colunas {
     flex-direction: column;
     gap: 20px;
-    // margin: 0 auto;
-  }
+        // margin: 0 auto;
+    }
   
   .coluna {
     min-width: unset;

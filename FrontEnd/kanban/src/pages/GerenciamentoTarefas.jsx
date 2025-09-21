@@ -338,8 +338,8 @@ export default function GerenciamentoTarefas() {
                             {editErrors.usuario && <span className="error">{editErrors.usuario.message}</span>}
 
                             <div className="btns">
-                                <button type="submit" className="saveButton">Salvar</button>
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom">Fechar</button>
+                                <button type="submit" className="saveButton buttonModal">Salvar</button>
+                                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom buttonModal">Fechar</button>
                             </div>
                         </form>
 

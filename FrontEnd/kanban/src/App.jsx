@@ -1,5 +1,5 @@
 import { BrowserRouter , Route, Routes} from "react-router-dom";
-import CadastroUsuario from './pages/cadastroUsuario';
+import CadastroUsuario from './pages/CadastroUsuario';
 import CadastroTarefas from "./pages/CadastroTarefas";
 import GerenciamentoTarefas from "./pages/GerenciamentoTarefas";
 import Header from "./components/Header";
@@ -13,9 +13,10 @@ function App() {
       <BrowserRouter>
         <Routes>
               <Route path='/' element={<Layout/>}>
-                <Route path="cadusuario" index element={<CadastroUsuario/>}/>
+                <Route index element={<GerenciamentoTarefas/>}/>
+                <Route path="cadusuario" element={<CadastroUsuario/>}/>
                 <Route path="cadtarefas" element={<CadastroTarefas/>}/>
-                <Route path="gerenciamento_tarefas" element={<GerenciamentoTarefas/>}/>
+                <Route path="gerenciamento_tarefas" index element={<GerenciamentoTarefas/>}/>
               </Route>
         </Routes>
       </BrowserRouter>    

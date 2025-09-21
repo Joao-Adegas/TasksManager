@@ -47,17 +47,13 @@ export default function CadastroUsuario() {
         } catch (e) {
     if (e.response && e.response.data) {
         let backendError = e.response.data;
-
-        // caso seja string JSON, converte para objeto
         if (typeof backendError === "string") {
             try {
                 backendError = JSON.parse(backendError);
             } catch {
-                // se não der para parsear, mantém como string
+
             }
         }
-
-        // agora conseguimos pegar a mensagem
         if (backendError.error) {
             setError(backendError.error);
         } else {

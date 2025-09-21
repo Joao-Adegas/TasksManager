@@ -27,6 +27,8 @@ header{
     .link-header{
         color: #ffffff;
         text-decoration: none;
+        outline-color: $texto-branco;
+        outline-offset: 0.3rem;
 
         @media (max-width:1170px) {
             font-size: 0.9rem;
