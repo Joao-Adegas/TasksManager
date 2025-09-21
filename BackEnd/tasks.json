@@ -1,10 +1,27 @@
 [
   {
-    "id": 1,
-    "descricao": "Terminar de organiar a aula de Regex",
-    "setor": "Senai",
+    "id": 2,
+    "descricao": "fazer levantamento",
+    "setor": "1234564548",
+    "usuario": 3,
+    "prioridade": "Media",
+    "status": "Pronto"
+  },
+  {
+    "id": 3,
+    "descricao": "banco",
+    "setor": "1234564548",
+    "usuario": 3,
+    "prioridade": "Media",
+    "status": "Fazendo"
+  },
+  {
+    "id": 4,
+    "descricao": "Ensinar react",
+    "setor": "TI",
     "usuario": 1,
     "prioridade": "Alta",
+<<<<<<< HEAD
     "status": "Pronto"
   },
   {
@@ -22,5 +39,8 @@
     "usuario": 1,
     "prioridade": "Media",
     "status": "Fazendo"
+=======
+    "status": "A Fazer"
+>>>>>>> 22c74fff6ff2a5b715a240bbfe898d2daa473cfb
   }
 ]

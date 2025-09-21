@@ -15,6 +15,7 @@ function App() {
               <Route path='/' element={<Layout/>}>
                 <Route index element={<GerenciamentoTarefas/>}/>
                 <Route path="cadusuario" element={<CadastroUsuario/>}/>
+                <Route path="cadusuario" index element={<CadastroUsuario/>}/>
                 <Route path="cadtarefas" element={<CadastroTarefas/>}/>
                 <Route path="gerenciamento_tarefas" index element={<GerenciamentoTarefas/>}/>
               </Route>
