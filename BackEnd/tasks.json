@@ -5,7 +5,7 @@
     "setor": "1234564548",
     "usuario": 3,
     "prioridade": "Media",
-    "status": "Pronto"
+    "status": "A Fazer"
   },
   {
     "id": 3,
@@ -21,26 +21,6 @@
     "setor": "TI",
     "usuario": 1,
     "prioridade": "Alta",
-<<<<<<< HEAD
-    "status": "Pronto"
-  },
-  {
-    "id": 2,
-    "descricao": "asxasxaxs",
-    "setor": "sasxaxs",
-    "usuario": 1,
-    "prioridade": "Media",
     "status": "A Fazer"
-  },
-  {
-    "id": 3,
-    "descricao": "xaqsa",
-    "setor": "xsaxasx",
-    "usuario": 1,
-    "prioridade": "Media",
-    "status": "Fazendo"
-=======
-    "status": "A Fazer"
->>>>>>> 22c74fff6ff2a5b715a240bbfe898d2daa473cfb
   }
 ]

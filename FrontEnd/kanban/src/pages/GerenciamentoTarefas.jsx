@@ -1,12 +1,15 @@
 import "../styles/GerenciamentoTarefas.scss"
 import React, { useState, useEffect } from 'react';
 import ModalComponent from "../components/Modal";
+import CardTask from "../components/CardTask";
+import { DroppableColumn } from "../components/DroppableColumn";
 import axios from "axios";
 import Swal from 'sweetalert2'
-
+import { DndContext } from "@dnd-kit/core"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 
 
 export default function GerenciamentoTarefas() {
@@ -114,6 +117,20 @@ export default function GerenciamentoTarefas() {
         }
     }
 
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+        if (!over) { return }
+
+        const taskID = Number(active.id)
+        const newStatus = over.id;
+
+        const task = tasks.find(t => t.id === taskID);
+
+        if (task && task.status != newStatus) {
+            updateTask(taskID, { status: newStatus })
+        }
+    }
+
     useEffect(() => {
         viewTasks()
         viewUsers()
@@ -124,232 +141,115 @@ export default function GerenciamentoTarefas() {
         <section className="tarefas">
             <h1>Tarefas</h1>
 
-            <div className="colunas">
-                <div className="coluna">
-                    <h2>A fazer</h2>
-
-                    <div className="cards-column">
-                        {tasks.some(task => task.status === "A Fazer") ? (
-                            tasks.map(element => (
-                                element.status == "A Fazer" && (
-
-                                    <div className="card-tarefa" key={element.id}>
-
-                                        <div className="separador-campo">
-                                            <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
-                                            <span>{element.descricao}</span>
-                                        </div>
-
-                                        <div className="separador-campo">
-                                            <label className="label-campo" aria-label="Setor da tarefa">Setor</label>
-                                            <span>{element.setor}</span>
-                                        </div>
-
-                                        <div className="separador-campo">
-                                            <label className="label-campo" aria-label="Nível de prioridade">Prioridade</label>
-                                            <span>{element.prioridade}</span>
-                                        </div>
-
-                                        <div className="separador-campo">
-                                            <label className="label-campo" aria-label="Vinculo da tarefa">Vinculada A</label>
-                                            <span>
-                                                {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
-                                            </span>
-                                        </div>
-
-                                        <div className="opt-actions">
-                                            <button onClick={() => openEditModal(element)}>Editar</button>
-                                            <button onClick={() => deleteTask(element.id)}>Excluir</button>
-                                        </div>
-
-                                        <div className="separador-campo">
-                                            <select value={element.status} onChange={(e) => setStatusChanges({
-                                                ...statusChanges,
-                                                [element.id]: e.target.value
-                                            })}>
-                                                <option value="A Fazer">A fazer</option>
-                                                <option value="Fazendo">Fazendo</option>
-                                                <option value="Pronto">Pronto</option>
-                                            </select>
-                                            <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} aria-label="Alterar Status">
-                                                Alterar Status
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                )
-
-                            ))
-                        ) : (
-                            <p>Nenhuma tarefa A fazer</p>
-                        )}
-
+            <DndContext onDragEnd={handleDragEnd}>
+                <div className="colunas">
+                    <div className="coluna">
+                        <h2>A fazer</h2>
+                        <DroppableColumn id="A Fazer">
+                            {tasks.some(tasks => tasks.status === "A Fazer") ? (
+                                tasks.filter(element => element.status == "A Fazer")
+                                    .map(element => <CardTask
+                                        key={element.id}
+                                        element={element}
+                                        usuarios={usuarios}
+                                        statusChanges={statusChanges}
+                                        setStatusChanges={setStatusChanges}
+                                        openEditModal={openEditModal}
+                                        deleteTask={deleteTask}
+                                        updateTask={updateTask}
+                                    />)) : (
+                                <p>Nenhuma tarefa</p>
+                            )}
+                        </DroppableColumn>
                     </div>
-                </div>
-                <div className="coluna">
-                    <h2>Fazendo</h2>
 
-                    <div className="cards-column">
-
-                        {tasks.some(task => task.status === "Fazendo") > 0 ? (tasks.map(element => (
-                            element.status == "Fazendo" && (
-
-                                <div className="card-tarefa" key={element.id}>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
-                                        <span>{element.descricao}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Setor da tarefa">Setor</label>
-                                        <span>{element.setor}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Prioridade da tarefa" >Prioridade</label>
-                                        <span>{element.prioridade}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Vinculo da tarefa">Vinculada A</label>
-                                        <span>
-                                            {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
-                                        </span>
-                                    </div>
-
-                                    <div className="opt-actions">
-                                        <button onClick={() => openEditModal(element)} aria-label="Editar tarefa">Editar</button>
-                                        <button onClick={() => deleteTask(element.id)} aria-label="Excluir tarefa">Excluir</button>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <select value={element.status} onChange={(e) => setStatusChanges({
-                                            ...statusChanges,
-                                            [element.id]: e.target.value
-                                        })}>
-                                            <option value="A Fazer">A fazer</option>
-                                            <option value="Fazendo">Fazendo</option>
-                                            <option value="Pronto">Pronto</option>
-                                        </select>
-                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} aria-label="Alterar Status">
-                                            Alterar Status
-                                        </button>
-
-                                    </div>
-                                </div>
-                            ))
-
-                        )) : (
-                            <p>Nehuma tarefa</p>
-                        )}
+                    <div className="coluna">
+                        <h2>Fazendo</h2>
+                        <DroppableColumn id="Fazendo">
+                            {tasks.some(tasks => tasks.status === "Fazendo") ? (
+                                tasks.filter(element => element.status == "Fazendo")
+                                    .map(element => <CardTask
+                                        key={element.id}
+                                        element={element}
+                                        usuarios={usuarios}
+                                        statusChanges={statusChanges}
+                                        setStatusChanges={setStatusChanges}
+                                        openEditModal={openEditModal}
+                                        deleteTask={deleteTask}
+                                        updateTask={updateTask}
+                                    />)) : (
+                                <p>Nenhuma tarefa</p>
+                            )}
+                        </DroppableColumn>
                     </div>
-                </div>
-                <div className="coluna">
-                    <h2>Pronto</h2>
-
-                    <div className="cards-column">
-
-                        {tasks.some(task => task.status === "Pronto") ? (tasks.map(element => (
-                            element.status == "Pronto" && (
-
-                                <div className="card-tarefa" key={element.id}>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
-                                        <span>{element.descricao}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Setor da Tarefa">Setor</label>
-                                        <span>{element.setor}</span>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <label className="label-campo" aria-label="Prioridade da Tarefa">Prioridade</label>
-                                        <span>{element.prioridade}</span>
-                                    </div>
-
-                                    <div className="separador-campo" aria-label="Vinculo da tarefa">
-                                        <label className="label-campo">Vinculada A</label>
-                                        <span>
-                                            {usuarios.find(u => u.id == element.usuario)?.nome || "Usuário não encontrado"}
-                                        </span>
-                                    </div>
-
-                                    <div className="opt-actions">
-                                        <button onClick={() => openEditModal(element)}>Editar</button>
-                                        <button onClick={() => deleteTask(element.id)}>Excluir</button>
-                                    </div>
-
-                                    <div className="separador-campo">
-                                        <select value={element.status} onChange={(e) => setStatusChanges({
-                                            ...statusChanges,
-                                            [element.id]: e.target.value
-                                        })}>
-                                            <option value="A Fazer">A fazer</option>
-                                            <option value="Fazendo">Fazendo</option>
-                                            <option value="Pronto">Pronto</option>
-                                        </select>
-                                        <button onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} aria-label="Alterar Status">
-                                            Alterar Status
-                                        </button>
-
-                                    </div>
-                                </div>
-                            ))
-
-                        )) : (
-                            <p>Nenhuma tarefa concluida</p>
-                        )}
-
+                    <div className="coluna">
+                        <h2>Pronto</h2>
+                        <DroppableColumn id="Pronto">
+                            {tasks.some(tasks => tasks.status === "Pronto") ? (
+                                tasks.filter(element => element.status == "Pronto")
+                                    .map(element => <CardTask
+                                        key={element.id}
+                                        element={element}
+                                        usuarios={usuarios}
+                                        statusChanges={statusChanges}
+                                        setStatusChanges={setStatusChanges}
+                                        openEditModal={openEditModal}
+                                        deleteTask={deleteTask}
+                                        updateTask={updateTask}
+                                    />)) : (
+                                <p>Nenhuma tarefa</p>
+                            )}
+                        </DroppableColumn>
                     </div>
                 </div>
 
-                {isModalOpen && (
-                    <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} >
-                        <h2>Editar Tarefa</h2>
-                        <form onSubmit={handleEditSubmit((data) => handleUpdateTask(data))}>
-                            <label>Descrição</label>
-                            <input type="text" {...editRegister("descricao")} />
-                            {editErrors.descricao && <span className="error">{editErrors.descricao.message}</span>}
-
-                            <label>Setor</label>
-                            <input type="text" {...editRegister("setor")} />
-                            {editErrors.setor && <span className="error">{editErrors.setor.message}</span>}
-
-                            <label>Prioridade</label>
-                            <select {...editRegister("prioridade")}>
-                                <option value="Alta">Alta</option>
-                                <option value="Media">Média</option>
-                                <option value="Baixa">Baixa</option>
-                            </select>
-                            {editErrors.prioridade && <span className="error">{editErrors.prioridade.message}</span>}
-
-                            <label>Usuário</label>
-                            <select {...editRegister("usuario")}>
-                                <option value="">Escolha um usuário</option>
-                                {usuarios.map((user) => (
-                                    <option key={user.id} value={user.id}>
-                                        {user.nome}
-                                    </option>
-                                ))}
-                            </select>
-                            {editErrors.usuario && <span className="error">{editErrors.usuario.message}</span>}
-
-                            <div className="btns">
-                                <button type="submit" className="saveButton buttonModal">Salvar</button>
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom buttonModal">Fechar</button>
-                            </div>
-                        </form>
-
-                    </ModalComponent>
-                )}
 
 
-            </div>
 
 
+
+            </DndContext>
+
+
+
+            {isModalOpen && (
+                <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} >
+                    <h2>Editar Tarefa</h2>
+                    <form onSubmit={handleEditSubmit((data) => handleUpdateTask(data))}>
+                        <label>Descrição</label>
+                        <input type="text" {...editRegister("descricao")} />
+                        {editErrors.descricao && <span className="error">{editErrors.descricao.message}</span>}
+
+                        <label>Setor</label>
+                        <input type="text" {...editRegister("setor")} />
+                        {editErrors.setor && <span className="error">{editErrors.setor.message}</span>}
+
+                        <label>Prioridade</label>
+                        <select {...editRegister("prioridade")}>
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                        {editErrors.prioridade && <span className="error">{editErrors.prioridade.message}</span>}
+
+                        <label>Usuário</label>
+                        <select {...editRegister("usuario")}>
+                            <option value="">Escolha um usuário</option>
+                            {usuarios.map((user) => (
+                                <option key={user.id} value={user.id}>
+                                    {user.nome}
+                                </option>
+                            ))}
+                        </select>
+                        {editErrors.usuario && <span className="error">{editErrors.usuario.message}</span>}
+
+                        <div className="btns">
+                            <button type="submit" className="saveButton buttonModal">Salvar</button>
+                            <button type="button" onClick={() => setIsModalOpen(false)} className="btn-bottom exitBottom buttonModal">Fechar</button>
+                        </div>
+                    </form>
+                </ModalComponent>
+            )}
         </section>
     )
 }
