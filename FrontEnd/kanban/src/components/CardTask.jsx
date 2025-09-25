@@ -1,4 +1,5 @@
 import { DroggableCard } from "./DroggableCard";
+import "../styles/CardTask.scss"
 
 export default function CardTask({ 
     element, 

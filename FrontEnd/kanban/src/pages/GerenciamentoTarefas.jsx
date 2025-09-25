@@ -124,8 +124,7 @@ export default function GerenciamentoTarefas() {
             <h1>Tarefas</h1>
             <DndContext
                 onDragEnd={handleDragEnd}
-                collisionDetection={closestCenter}
-                modifiers={[restrictToWindowEdges]} 
+              
             >
                 <div className="colunas">
                     {["A Fazer", "Fazendo", "Pronto"].map(status => (

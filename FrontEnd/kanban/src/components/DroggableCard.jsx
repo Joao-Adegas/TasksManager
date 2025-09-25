@@ -8,12 +8,10 @@ export function DroggableCard({ children, id }) {
     });
 
     const style = transform ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         opacity: isDragging ? 0.5 : 1,
-        zIndex: isDragging ? 999 : 1,
-        cursor: isDragging ? 'grabbing' : 'grab',
+        zIndex: isDragging ? 1 : 1,
     } : {
-        cursor: 'grab'
+        cursor: 'pointet'
     };
 
     return (
