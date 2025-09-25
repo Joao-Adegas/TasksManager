@@ -11,6 +11,7 @@
     .colunas{
         display: flex;
         justify-content: space-between;
+        overflow: hidden; 
         flex-wrap: wrap;
         gap: 0.5rem;
     

@@ -77,14 +77,14 @@ export default function CadastroUsuario() {
                 <form className="form" onSubmit={handleSubmit(createUsers)}>
 
                     <div className="input">
-                        <label>Nome:</label>
-                        <input type="text" {...register("nome")} maxLength={29}/>
+                        <label htmlFor="nome">Nome:</label>
+                        <input type="text" {...register("nome")} id="nome" maxLength={29}/>
                         {errors.nome && <span className="error">{errors.nome.message}</span>}
                     </div>
 
                     <div className="input">
-                        <label>Email:</label>
-                        <input type="text" {...register("email")} maxLength={29}/>
+                        <label htmlFor="email">Email:</label>
+                        <input type="text" {...register("email")} id="email" maxLength={29}/>
                         {errors.email && <span className="error">{errors.email.message}</span>}
                         {error && <span className="error">{error}</span>}
                     </div>

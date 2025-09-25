@@ -5,7 +5,7 @@
     "setor": "1234564548",
     "usuario": 3,
     "prioridade": "Media",
-    "status": "A Fazer"
+    "status": "Fazendo"
   },
   {
     "id": 3,
@@ -13,7 +13,7 @@
     "setor": "1234564548",
     "usuario": 3,
     "prioridade": "Media",
-    "status": "Fazendo"
+    "status": "A Fazer"
   },
   {
     "id": 4,
@@ -21,6 +21,6 @@
     "setor": "TI",
     "usuario": 1,
     "prioridade": "Alta",
-    "status": "A Fazer"
+    "status": "Fazendo"
   }
 ]

@@ -5,11 +5,31 @@ import CardTask from "../components/CardTask";
 import { DroppableColumn } from "../components/DroppableColumn";
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { DndContext } from "@dnd-kit/core"
+import { DndContext, useDraggable, closestCenter } from "@dnd-kit/core";
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+
+function DraggableCardWrapper({ element, ...props }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: element.id });
+
+  // aplica apenas rotação, mas mantém transform do dnd-kit
+  const style = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0) rotate(${isDragging ? 0 : 0}deg)`
+      : undefined,
+    transition: isDragging ? "none" : "transform 0.1s ease",
+    cursor: isDragging ? "grabbing" : "grab"
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      <CardTask element={element} {...props} />
+    </div>
+  );
+}
 
 
 export default function GerenciamentoTarefas() {
@@ -18,204 +38,124 @@ export default function GerenciamentoTarefas() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [usuarios, setUsers] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState("");
     const [statusChanges, setStatusChanges] = useState({});
 
     const editSchema = z.object({
-        descricao: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, {
-            message: "A descrição deve conter no minimo 5 caracteres. Apenas numeros"
-        }),
-        setor: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, {
-            message: "O setor deve conter ao menos 2 caracteres"
-        }),
-        usuario: z.preprocess(
-            (val) => Number(val), // converte a string do select para number
-            z.number().int().min(1, "Escolha um usuário")
-        ),
-        prioridade: z.string().regex(/^(Alta|Media|Baixa)$/, {
-            message: "A prioridade deve ser apenas Alta, Baixa ou Media"
-        })
-    })
+        descricao: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, { message: "A descrição deve conter no minimo 5 caracteres." }),
+        setor: z.string().regex(/^(?!.* {2,})[A-Za-z0-9 ]{5,}$/, { message: "O setor deve conter ao menos 5 caracteres" }),
+        usuario: z.preprocess(val => Number(val), z.number().int().min(1, "Escolha um usuário")),
+        prioridade: z.string().regex(/^(Alta|Media|Baixa)$/, { message: "A prioridade deve ser Alta, Media ou Baixa" })
+    });
 
-    const {
-        register: editRegister,
-        handleSubmit: handleEditSubmit,
-        formState: { errors: editErrors },
-        reset: resetEditForm
-    } = useForm({
+    const { register: editRegister, handleSubmit: handleEditSubmit, formState: { errors: editErrors }, reset: resetEditForm } = useForm({
         resolver: zodResolver(editSchema),
         defaultValues: editingTask || {}
     });
 
+    useEffect(() => {
+        viewTasks();
+        viewUsers();
+    }, []);
+
     async function viewUsers() {
         try {
             const response = await axios.get("http://127.0.0.1:3000/users");
-            console.table(Object.values(response.data));
-            setUsers(response.data)
-            console.table(response.data)
+            setUsers(response.data);
         } catch (e) {
             console.log(e);
         }
+    }
 
+    async function viewTasks() {
+        try {
+            const response = await axios.get(url);
+            setTasks(response.data);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const openEditModal = (task) => {
         setEditingTask(task);
         setIsModalOpen(true);
-        resetEditForm(task); // atualiza os valores do formulário com a tarefa atual
-        console.table("Modal aberto");
+        resetEditForm(task);
     };
-
 
     const handleUpdateTask = (data) => {
         const payload = {
             descricao: data.descricao,
             setor: data.setor,
             prioridade: data.prioridade,
-            usuario: Number(data.usuario) // converte para número se o backend espera number
+            usuario: Number(data.usuario)
         };
-
         updateTask(editingTask.id, payload);
     };
 
     const updateTask = async (id, updatedData) => {
-
         try {
             await axios.patch(`http://127.0.0.1:3000/tasks/${id}`, updatedData);
-            console.log("Tarefa atualizada com sucesso!");
             viewTasks();
             setIsModalOpen(false);
         } catch (e) {
-            console.error("Erro ao atualizar tarefa", e);
+            console.error(e);
         }
     };
 
-    async function viewTasks() {
-        try {
-            const response = await axios.get(url);
-            console.table(Object.values(response.data)?.[0]);
-            setTasks(response.data)
-        } catch (error) {
-            console.log("Erro ao buscar tarefas", error);
-            return error;
-        }
-    }
-
     const deleteTask = async (id) => {
         try {
-            const response = await axios.delete(`http://127.0.0.1:3000/tasks/${id}`);
-            console.log("Tarefa deletada com sucesso");
+            await axios.delete(`http://127.0.0.1:3000/tasks/${id}`);
             viewTasks();
-            Swal.fire({
-                title: "Terafa deletada com sucesso!",
-                icon: "success",
-                draggable: true
-            });
-        }
-        catch (e) {
+            Swal.fire({ title: "Tarefa deletada com sucesso!", icon: "success", draggable: true });
+        } catch (e) {
             console.log(e);
         }
-    }
+    };
 
-    const handleDragEnd = (event) => {
-        const { active, over } = event;
-        if (!over) { return }
-
-        const taskID = Number(active.id)
+    const handleDragEnd = ({ active, over }) => {
+        if (!over) return;
+        const taskID = Number(active.id);
         const newStatus = over.id;
-
         const task = tasks.find(t => t.id === taskID);
-
-        if (task && task.status != newStatus) {
-            updateTask(taskID, { status: newStatus })
-        }
-    }
-
-    useEffect(() => {
-        viewTasks()
-        viewUsers()
-    }, [])
-
+        if (task && task.status !== newStatus) updateTask(taskID, { status: newStatus });
+    };
 
     return (
         <section className="tarefas">
             <h1>Tarefas</h1>
-
-            <DndContext onDragEnd={handleDragEnd}>
+            <DndContext
+                onDragEnd={handleDragEnd}
+                collisionDetection={closestCenter}
+                modifiers={[restrictToWindowEdges]} 
+            >
                 <div className="colunas">
-                    <div className="coluna">
-                        <h2>A fazer</h2>
-                        <DroppableColumn id="A Fazer">
-                            {tasks.some(tasks => tasks.status === "A Fazer") ? (
-                                tasks.filter(element => element.status == "A Fazer")
-                                    .map(element => <CardTask
-                                        key={element.id}
-                                        element={element}
-                                        usuarios={usuarios}
-                                        statusChanges={statusChanges}
-                                        setStatusChanges={setStatusChanges}
-                                        openEditModal={openEditModal}
-                                        deleteTask={deleteTask}
-                                        updateTask={updateTask}
-                                    />)) : (
-                                <p>Nenhuma tarefa</p>
-                            )}
-                        </DroppableColumn>
-                    </div>
-
-                    <div className="coluna">
-                        <h2>Fazendo</h2>
-                        <DroppableColumn id="Fazendo">
-                            {tasks.some(tasks => tasks.status === "Fazendo") ? (
-                                tasks.filter(element => element.status == "Fazendo")
-                                    .map(element => <CardTask
-                                        key={element.id}
-                                        element={element}
-                                        usuarios={usuarios}
-                                        statusChanges={statusChanges}
-                                        setStatusChanges={setStatusChanges}
-                                        openEditModal={openEditModal}
-                                        deleteTask={deleteTask}
-                                        updateTask={updateTask}
-                                    />)) : (
-                                <p>Nenhuma tarefa</p>
-                            )}
-                        </DroppableColumn>
-                    </div>
-                    <div className="coluna">
-                        <h2>Pronto</h2>
-                        <DroppableColumn id="Pronto">
-                            {tasks.some(tasks => tasks.status === "Pronto") ? (
-                                tasks.filter(element => element.status == "Pronto")
-                                    .map(element => <CardTask
-                                        key={element.id}
-                                        element={element}
-                                        usuarios={usuarios}
-                                        statusChanges={statusChanges}
-                                        setStatusChanges={setStatusChanges}
-                                        openEditModal={openEditModal}
-                                        deleteTask={deleteTask}
-                                        updateTask={updateTask}
-                                    />)) : (
-                                <p>Nenhuma tarefa</p>
-                            )}
-                        </DroppableColumn>
-                    </div>
+                    {["A Fazer", "Fazendo", "Pronto"].map(status => (
+                        <div key={status} className="coluna">
+                            <h2>{status}</h2>
+                            <DroppableColumn id={status}>
+                                {tasks.some(t => t.status === status) ? (
+                                    tasks.filter(t => t.status === status).map(element => (
+                                        <DraggableCardWrapper
+                                            key={element.id}
+                                            element={element}
+                                            usuarios={usuarios}
+                                            statusChanges={statusChanges}
+                                            setStatusChanges={setStatusChanges}
+                                            openEditModal={openEditModal}
+                                            deleteTask={deleteTask}
+                                            updateTask={updateTask}
+                                        />
+                                    ))
+                                ) : (<p>Nenhuma tarefa</p>)}
+                            </DroppableColumn>
+                        </div>
+                    ))}
                 </div>
-
-
-
-
-
-
             </DndContext>
 
-
-
             {isModalOpen && (
-                <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} >
+                <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen}>
                     <h2>Editar Tarefa</h2>
-                    <form onSubmit={handleEditSubmit((data) => handleUpdateTask(data))}>
+                    <form onSubmit={handleEditSubmit(handleUpdateTask)}>
                         <label>Descrição</label>
                         <input type="text" {...editRegister("descricao")} />
                         {editErrors.descricao && <span className="error">{editErrors.descricao.message}</span>}
@@ -235,10 +175,8 @@ export default function GerenciamentoTarefas() {
                         <label>Usuário</label>
                         <select {...editRegister("usuario")}>
                             <option value="">Escolha um usuário</option>
-                            {usuarios.map((user) => (
-                                <option key={user.id} value={user.id}>
-                                    {user.nome}
-                                </option>
+                            {usuarios.map(user => (
+                                <option key={user.id} value={user.id}>{user.nome}</option>
                             ))}
                         </select>
                         {editErrors.usuario && <span className="error">{editErrors.usuario.message}</span>}
@@ -251,5 +189,5 @@ export default function GerenciamentoTarefas() {
                 </ModalComponent>
             )}
         </section>
-    )
+    );
 }

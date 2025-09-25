@@ -9,7 +9,6 @@ export function DroppableColumn({ children, id }) {
         backgroundColor: isOver ? '#dadadaff' : undefined,
         borderRadius:'1rem',
         padding:'1rem',
-        heigth:'20rem',
         transition: 'background-color 0.2s ease'
     };
 
