@@ -18,5 +18,10 @@
     "id": 4,
     "nome": "joaoAdegas",
     "email": "fer@email.com"
+  },
+  {
+    "id": 5,
+    "nome": "Vinixius",
+    "email": "vini@gmail.com"
   }
 ]

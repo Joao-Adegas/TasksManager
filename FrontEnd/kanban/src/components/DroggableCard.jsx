@@ -10,8 +10,10 @@ export function DroggableCard({ children, id }) {
     const style = transform ? {
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 1 : 1,
+        transition: isDragging ? "none" : "transform 0.1s ease",
+        cursor: isDragging ? "grabbing" : "grab"
     } : {
-        cursor: 'pointet'
+        cursor: 'dragging'
     };
 
     return (
