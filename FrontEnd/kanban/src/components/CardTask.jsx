@@ -1,18 +1,19 @@
 import { DroggableCard } from "./DroggableCard";
 import "../styles/CardTask.scss"
 
-export default function CardTask({ 
-    element, 
-    usuarios, 
-    statusChanges, 
-    setStatusChanges, 
-    openEditModal, 
-    deleteTask, 
-    updateTask 
+export default function CardTask({
+    element,
+    usuarios,
+    statusChanges,
+    setStatusChanges,
+    openEditModal,
+    deleteTask,
+    updateTask
 }) {
     return (
         <DroggableCard id={element.id}>
-            <div className="card-tarefa">
+            <div className="card-tarefa" >
+
                 <div className="separador-campo">
                     <label className="label-campo" aria-label="Descrição da tarefa">Descrição</label>
                     <span>{element.descricao}</span>
@@ -36,34 +37,52 @@ export default function CardTask({
                 </div>
 
                 <div className="opt-actions">
-                    <button onClick={() => openEditModal(element)} aria-label="Editar tarefa">
+
+                    <button 
+                        onClick={(e) => { openEditModal(element) }}
+                        onPointerDown={(e) => {e.stopPropagation(); e.preventDefault();}} 
+                        onKeyDown={(e)=>{e.stopPropagation();}}
+                        aria-label="Editar tarefa">
                         Editar
                     </button>
-                    <button onClick={() => deleteTask(element.id)} aria-label="Excluir tarefa">
+
+                    <button 
+                        onClick={(e) => {deleteTask(element.id) }} 
+                        onPointerDown={(e) =>  {e.stopPropagation(); e.preventDefault() }}
+                        onKeyDown={(e)=>{e.stopPropagation();}}
+                        aria-label="Excluir tarefa">
                         Excluir
                     </button>
                 </div>
 
                 <div className="separador-campo">
-                    <select 
-                        value={statusChanges[element.id] || element.status} 
-                        onChange={(e) => setStatusChanges({
-                            ...statusChanges,
-                            [element.id]: e.target.value
-                        })}
+
+                    <select
+                        value={statusChanges[element.id] || element.status}
+                        onChange={(e) => setStatusChanges({...statusChanges, [element.id]: e.target.value})}
+                        onPointerDown={(e) =>  {e.stopPropagation(); e.preventDefault() }}
+                        onKeyDown={(e)=>{e.stopPropagation();}}
                     >
+
                         <option value="A Fazer">A fazer</option>
                         <option value="Fazendo">Fazendo</option>
                         <option value="Pronto">Pronto</option>
+
                     </select>
-                    <button 
-                        onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })} 
-                        aria-label="Alterar Status"
-                    >
+
+                    <button
+                        onClick={() => updateTask(element.id, { status: statusChanges[element.id] || element.status })}
+                        onPointerDown={(e) => {e.preventDefault(); e.stopPropagation();}}
+                        onKeyDown={(e)=>{e.stopPropagation();}}
+                        aria-label="Alterar Status">
                         Alterar Status
                     </button>
+
                 </div>
+
             </div>
+
         </DroggableCard>
+
     );
 }

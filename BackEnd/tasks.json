@@ -6,21 +6,5 @@
     "usuario": 3,
     "prioridade": "Media",
     "status": "A Fazer"
-  },
-  {
-    "id": 3,
-    "descricao": "banco",
-    "setor": "1234564548",
-    "usuario": 3,
-    "prioridade": "Media",
-    "status": "Pronto"
-  },
-  {
-    "id": 4,
-    "descricao": "Ensinar react",
-    "setor": "TI",
-    "usuario": 1,
-    "prioridade": "Alta",
-    "status": "Fazendo"
   }
 ]
