@@ -61,7 +61,7 @@ export default function CardTask({
                         value={statusChanges[element.id] || element.status}
                         onChange={(e) => setStatusChanges({...statusChanges, [element.id]: e.target.value})}
                         onPointerDown={(e) =>  {e.stopPropagation(); }}
-                      
+                        onKeyDown={(e)=>{e.stopPropagation();}}
                     >
 
                         <option value="A Fazer">A fazer</option>
