@@ -120,15 +120,12 @@ export default function GerenciamentoTarefas() {
     };
 
     return (
-        <section className="tarefas">
-            <h1>Tarefas</h1>
-            <DndContext
-                onDragEnd={handleDragEnd}
-              
-            >
+        <section className="tarefas" aria-labelledby="titulo-tarefas">
+            <h1 id="titulo-tarefas">Tarefas</h1>
+            <DndContext onDragEnd={handleDragEnd}>
                 <div className="colunas">
                     {["A Fazer", "Fazendo", "Pronto"].map(status => (
-                        <div key={status} className="coluna">
+                        <div key={status} className="coluna" aria-labelledby={`coluna-${status}`}>
                             <h2>{status}</h2>
                             <DroppableColumn id={status}>
                                 {tasks.some(t => t.status === status) ? (
@@ -153,26 +150,26 @@ export default function GerenciamentoTarefas() {
 
             {isModalOpen && (
                 <ModalComponent onClose={() => setIsModalOpen(false)} isOpen={isModalOpen}>
-                    <h2>Editar Tarefa</h2>
+                    <h2 id={`coluna-${status}`}>Editar Tarefa</h2>
                     <form onSubmit={handleEditSubmit(handleUpdateTask)}>
-                        <label>Descrição</label>
-                        <input type="text" {...editRegister("descricao")} />
+                        <label htmlFor="descricao">Descrição</label>
+                        <input type="text" id="descricao" {...editRegister("descricao")} />
                         {editErrors.descricao && <span className="error">{editErrors.descricao.message}</span>}
 
-                        <label>Setor</label>
-                        <input type="text" {...editRegister("setor")} />
+                        <label htmlFor="setor">Setor</label>
+                        <input type="text" id="setor" {...editRegister("setor")} />
                         {editErrors.setor && <span className="error">{editErrors.setor.message}</span>}
 
-                        <label>Prioridade</label>
-                        <select {...editRegister("prioridade")}>
+                        <label htmlFor="prioridade">Prioridade</label>
+                        <select id="prioridade" {...editRegister("prioridade")}>
                             <option value="Alta">Alta</option>
                             <option value="Media">Média</option>
                             <option value="Baixa">Baixa</option>
                         </select>
                         {editErrors.prioridade && <span className="error">{editErrors.prioridade.message}</span>}
 
-                        <label>Usuário</label>
-                        <select {...editRegister("usuario")}>
+                        <label htmlFor="usuario">Usuário</label>
+                        <select id="usuario" {...editRegister("usuario")}>
                             <option value="">Escolha um usuário</option>
                             {usuarios.map(user => (
                                 <option key={user.id} value={user.id}>{user.nome}</option>
@@ -187,6 +184,8 @@ export default function GerenciamentoTarefas() {
                     </form>
                 </ModalComponent>
             )}
+
         </section>
+        
     );
 }

@@ -82,20 +82,20 @@ export default function CadastroTarefas() {
                 <form className="form" onSubmit={handleSubmit(createTask)}>
 
                     <div className="input">
-                        <label>Descrição</label>
-                        <input type="text" {...register("descricao")} maxLength={29}/>
+                        <label htmlFor="descricao">Descrição</label>
+                        <input type="text" id="descricao" {...register("descricao")} maxLength={29}/>
                         {errors.descricao && <span className="error">{errors.descricao.message}</span>}
                     </div>
 
                     <div className="input">
-                        <label>Setor</label>
-                        <input type="text" {...register("setor")} maxLength={29}/>
+                        <label htmlFor="setor">Setor</label>
+                        <input type="text" id="setor" {...register("setor")} maxLength={29}/>
                         {errors.setor && <span className="error">{errors.setor.message}</span>}
                     </div>
 
                     <div className="input">
-                        <label>Usuário</label>
-                        <select {...register("usuario")} >
+                        <label htmlFor="usuario">Usuário</label>
+                        <select id="setor" {...register("usuario")} >
                             <option value="">Selecione um Usuário</option>
                             {users.map((u) => (
                                 <option value={u.id} key={u.id}>{u.nome}</option>
@@ -106,8 +106,8 @@ export default function CadastroTarefas() {
 
 
                     <div className="input">
-                        <label>Prioridade</label>
-                        <select {...register("prioridade")}>
+                        <label htmlFor="prioridade">Prioridade</label>
+                        <select id="prioridade" {...register("prioridade")}>
                             <option defaultChecked>Selecione uma prioridade</option>
                             {prioridade.map(a => (
                                 <option value={a} key={a}>{a}</option>
