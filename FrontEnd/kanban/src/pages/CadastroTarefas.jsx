@@ -95,7 +95,7 @@ export default function CadastroTarefas() {
 
                     <div className="input">
                         <label htmlFor="usuario">Usuário</label>
-                        <select id="setor" {...register("usuario")} >
+                        <select id="usuario" {...register("usuario")} >
                             <option value="">Selecione um Usuário</option>
                             {users.map((u) => (
                                 <option value={u.id} key={u.id}>{u.nome}</option>
