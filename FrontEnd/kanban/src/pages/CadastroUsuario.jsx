@@ -12,7 +12,7 @@ export default function CadastroUsuario() {
 
     const schema = z.object({
         nome: z.string()
-            .regex(/^[A-Za-zÀ-ÿ]+( [A-Za-zÀ-ÿ]+)*$/, { message: "Digite apenas letras" }) /*Espaços tambem são caracteres*/
+            .regex(/^[A-Za-zÀ-ÿ]+( [A-Za-zÀ-ÿ]+)*$/, { message: "Digite apenas letras." }) /*Espaços tambem são caracteres*/
             .regex(/^.{3,15}$/, { message: "Mínimo de 3 caracteres e maximo 15." }),
 
         email: z.string()

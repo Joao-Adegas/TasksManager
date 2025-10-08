@@ -21,8 +21,7 @@ export default function CadastroTarefas() {
         })
         .regex(/^(?!.*\s{2,})[A-Za-zÀ-ÿ ]+$/, {
             message: "Somente letras e espaços (sem números, caracteres especiais ou dois espaços seguidos)."
-        })
-        ,
+        }),
         setor: z.string()
         .min(2, { message: "O setor deve ter ao menos 2 caracteres." })
         .max(15, { message: "O setor pode ter no máximo 15 caracteres." })

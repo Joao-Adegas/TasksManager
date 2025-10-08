@@ -23,5 +23,15 @@
     "id": 5,
     "nome": "Vinixius",
     "email": "vini@gmail.com"
+  },
+  {
+    "id": 6,
+    "nome": "João Silva",
+    "email": "joao@email.com"
+  },
+  {
+    "id": 7,
+    "nome": "João Silva",
+    "email": "joao@gmail.com"
   }
 ]
